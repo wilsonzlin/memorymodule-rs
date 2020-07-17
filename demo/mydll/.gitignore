@@ -1,4 +1,5 @@
 /mydll.dll
 /mydll.exp
 /mydll.lib
+/mydll.obj
 /mydll.so
