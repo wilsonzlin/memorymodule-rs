@@ -1,0 +1,8 @@
+[package]
+name = "myrustapp"
+version = "0.1.0"
+authors = ["Wilson Lin <code@wilsonl.in>"]
+edition = "2018"
+
+[dependencies]
+memorymodule-rs = { path = "../.." }

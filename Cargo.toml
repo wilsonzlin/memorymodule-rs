@@ -1,0 +1,12 @@
+[package]
+name = "memorymodule-rs"
+version = "0.0.1"
+authors = ["Wilson Lin <code@wilsonl.in>"]
+edition = "2018"
+include = ["/build.rs", "/src/**/*", "/vendor/MemoryModule/MemoryModule.*"]
+
+[dependencies]
+libc = "0.2.72"
+
+[build-dependencies]
+cc = "1.0.58"

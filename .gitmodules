@@ -1,0 +1,3 @@
+[submodule "MemoryModule"]
+	path = vendor/MemoryModule
+	url = https://github.com/fancycode/MemoryModule.git
