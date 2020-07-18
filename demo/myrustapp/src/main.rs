@@ -7,7 +7,7 @@ const MYDLL: &'static [u8] = include_bytes!("../../mydll/mydll.dll");
 type AddFn = extern "C" fn(c_int, c_int) -> c_int;
 
 fn main() {
-    let mm = MemoryModule::new(MYDLL.to_vec());
+    let mm = MemoryModule::new(MYDLL);
     let add = unsafe {
         mem::transmute::<_, AddFn>(mm.get_function("add"))
     };

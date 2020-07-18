@@ -1,6 +1,5 @@
 use std::os::raw::{c_void, c_char};
 use libc::size_t;
-use std::mem;
 use std::ffi::CString;
 use std::ptr::null;
 
@@ -14,21 +13,19 @@ extern "C" {
     fn MemoryFreeLibrary(module: HMEMORYMODULE) -> ();
 }
 
-pub struct MemoryModule {
-    src_data: *mut u8,
-    src_data_len: usize,
+pub struct MemoryModule<'d> {
+    // We keep this here just so it lasts for the lifetime of module.
+    _src_data: &'d [u8],
     module: HMEMORYMODULE,
 }
 
-impl MemoryModule {
-    pub fn new(mut data: Vec<u8>) -> MemoryModule {
-        data.shrink_to_fit();
+unsafe impl <'d> Send for MemoryModule<'d> {}
+unsafe impl <'d> Sync for MemoryModule<'d> {}
 
-
-        let ptr = data.as_mut_ptr();
+impl <'d> MemoryModule<'d> {
+    pub fn new(data: &'d [u8]) -> MemoryModule<'d> {
+        let ptr = data.as_ptr();
         let len = data.len();
-
-        mem::forget(data);
 
         let module = unsafe {
             MemoryLoadLibrary(ptr as *const c_void, len as size_t)
@@ -37,8 +34,7 @@ impl MemoryModule {
             panic!("loading library from in-memory data failed");
         };
         MemoryModule {
-            src_data: ptr,
-            src_data_len: len,
+            _src_data: data,
             module,
         }
     }
@@ -55,12 +51,10 @@ impl MemoryModule {
     }
 }
 
-impl Drop for MemoryModule {
+impl <'d> Drop for MemoryModule<'d> {
     fn drop(&mut self) {
         unsafe {
             MemoryFreeLibrary(self.module);
-            // Take ownership of original Vec<u8> so we can destroy it.
-            Vec::from_raw_parts(self.src_data, self.src_data_len, self.src_data_len);
         };
     }
 }
