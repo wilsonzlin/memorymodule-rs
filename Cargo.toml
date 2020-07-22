@@ -8,7 +8,7 @@ include = ["/build.rs", "/src/**/*", "/vendor/MemoryModule/MemoryModule.*"]
 license = "MIT"
 
 [dependencies]
-libc = "0.2.72"
+libc = "0.2"
 
 [build-dependencies]
-cc = "1.0.58"
+cc = "1"
